@@ -13,6 +13,7 @@ import (
 
 // MysqlDB wraps a GORM handle.
 type MysqlDB struct {
+	// Gorm is the underlying GORM database handle.
 	Gorm *gorm.DB
 }
 

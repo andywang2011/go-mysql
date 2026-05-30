@@ -10,16 +10,23 @@ import (
 // Config holds MySQL connection and pool settings.
 type Config struct {
 	// Address is host:port (often a proxy VIP). Ignored for DSN building when DSN is set.
-	Address  string
+	Address string
+	// Username is the MySQL user (ignored when DSN is set).
 	Username string
+	// Password is the MySQL password (ignored when DSN is set).
 	Password string
+	// Database is the default schema name (required when DSN is empty).
 	Database string
 	// DSN when non-empty is used as-is (proxy/cloud ready-made DSN); Address/Username may still be set for logging.
 	DSN string
 
-	MaxIdleConns  int
-	MaxOpenConns  int
-	TimeoutSec    int
+	// MaxIdleConns is the maximum idle connections in the pool.
+	MaxIdleConns int
+	// MaxOpenConns is the maximum open connections in the pool.
+	MaxOpenConns int
+	// TimeoutSec is the DSN timeout parameter in seconds.
+	TimeoutSec int
+	// SlowThreshold logs queries slower than this duration via GORM.
 	SlowThreshold time.Duration
 
 	// ConnMaxLifetime is the maximum lifetime of a pooled connection (default 5m).
@@ -29,6 +36,7 @@ type Config struct {
 	// ConnectTimeout bounds startup connect+retry when > 0.
 	ConnectTimeout time.Duration
 
+	// Retry controls exponential-backoff during connect.
 	Retry RetryConfig
 	// Logger is an optional GORM logger; nil falls back to default warn logger.
 	Logger glog.Interface
@@ -44,10 +52,14 @@ const (
 
 // RetryConfig controls exponential-backoff retry behavior during connect.
 type RetryConfig struct {
-	MaxAttempts  int
+	// MaxAttempts is the total number of attempts (including the first).
+	MaxAttempts int
+	// InitialDelay is the first backoff pause.
 	InitialDelay time.Duration
-	MaxDelay     time.Duration
-	Multiplier   float64
+	// MaxDelay caps exponential backoff.
+	MaxDelay time.Duration
+	// Multiplier scales delay after each failed attempt.
+	Multiplier float64
 }
 
 // ConfigDefault returns pool and timeout defaults; Address/Database/DSN must still be set before use.
