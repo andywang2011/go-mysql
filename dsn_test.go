@@ -22,11 +22,28 @@ func TestBuildDSN_escapesSpecialPassword(t *testing.T) {
 		TimeoutSec: 10,
 	}
 	got := BuildDSN(cfg)
-	if !strings.Contains(got, "p%40ss") {
-		t.Fatalf("password not escaped: %s", got)
-	}
 	if !strings.Contains(got, "@tcp(127.0.0.1:3306)/app") {
 		t.Fatalf("unexpected host: %s", got)
+	}
+	if strings.Contains(got, "p%40ss") {
+		t.Fatalf("password must not use net/url encoding: %s", got)
+	}
+}
+
+func TestBuildDSN_passwordWithAsterisk(t *testing.T) {
+	cfg := Config{
+		Address:    "127.0.0.1:3306",
+		Database:   "demo",
+		Username:   "root",
+		Password:   "j**2*kb999999999",
+		TimeoutSec: 10,
+	}
+	got := BuildDSN(cfg)
+	if strings.Contains(got, "%2A") {
+		t.Fatalf("asterisk must not be URL-encoded: %s", got)
+	}
+	if !strings.Contains(got, "j**2*kb999999999") {
+		t.Fatalf("password missing in dsn: %s", got)
 	}
 }
 
