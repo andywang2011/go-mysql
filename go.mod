@@ -1,6 +1,6 @@
 module github.com/andywang2011/go-mysql
 
-go 1.25
+go 1.27.3
 
 require (
 	github.com/DATA-DOG/go-sqlmock v1.5.2

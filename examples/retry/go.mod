@@ -1,6 +1,6 @@
 module github.com/andywang2011/go-mysql/examples/retry
 
-go 1.25
+go 1.27.3
 
 require github.com/andywang2011/go-mysql v0.0.0
 
