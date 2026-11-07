@@ -17,7 +17,8 @@ func TestNewDB_ctxCancelledBeforeOpen(t *testing.T) {
 	if _, err := NewDB(ctx, validConfig()); !errors.Is(err, context.Canceled) {
 		t.Fatal(err)
 	}
-	if _, err := NewDB(nil, Config{}); err == nil { //nolint:staticcheck
+	//lint:ignore SA1012 intentional nil context in test
+	if _, err := NewDB(nil, Config{}); err == nil {
 		t.Fatal("expected validation error")
 	}
 }
@@ -73,7 +74,8 @@ func TestNewDBWithRetry_ctxCancelStopsRetry(t *testing.T) {
 	if _, err := NewDBWithRetry(ctx, cfg); !errors.Is(err, context.Canceled) || calls.Load() != 0 {
 		t.Fatal(err, calls.Load())
 	}
-	if _, err := NewDBWithRetry(nil, Config{}); err == nil { //nolint:staticcheck
+	//lint:ignore SA1012 intentional nil context in test
+	if _, err := NewDBWithRetry(nil, Config{}); err == nil {
 		t.Fatal("expected validation error")
 	}
 }
@@ -84,7 +86,8 @@ func TestRetryManager_ctxPaths(t *testing.T) {
 	if err := rm.execute(ctx, func(context.Context) error { cancel(); return errors.New("x") }); !errors.Is(err, context.Canceled) {
 		t.Fatal(err)
 	}
-	if err := rm.execute(nil, func(context.Context) error { return nil }); err != nil { //nolint:staticcheck
+	//lint:ignore SA1012 intentional nil context in test
+	if err := rm.execute(nil, func(context.Context) error { return nil }); err != nil {
 		t.Fatal(err)
 	}
 	if err := sleepCtx(context.Background(), 0); err != nil {
