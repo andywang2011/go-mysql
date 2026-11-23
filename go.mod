@@ -4,7 +4,7 @@ go 1.27.3
 
 require (
 	github.com/DATA-DOG/go-sqlmock v1.5.2
-	github.com/go-sql-driver/mysql v1.10.1
+	github.com/go-sql-driver/mysql v1.10.2
 	go.uber.org/goleak v1.3.0
 	gorm.io/driver/mysql v1.6.0
 	gorm.io/gorm v1.31.2
